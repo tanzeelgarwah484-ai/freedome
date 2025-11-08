@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Amazing Blogger — Your Name</title>
+  <meta name="description" content="A clean, modern, and responsive blog template — ready to edit and deploy." />
+  <meta name="theme-color" content="#0ea5a4" />
+
+  <!-- Basic Open Graph -->
+  <meta property="og:title" content="Amazing Blogger — Your Name" />
+  <meta property="og:description" content="A clean, modern, and responsive blog template — ready to edit and deploy." />
+  <meta property="og:type" content="website" />
+
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+
+  <style>
+    :root{
+      --bg:#ffffff; --card:#f8fafc; --text:#0f172a; --muted:#475569; --accent:#0ea5a4; --glass:rgba(255,255,255,0.6);
+      --radius:14px; --maxw:1100px;
+    }
+    [data-theme='dark']{ --bg:#071023; --card:#071a2a; --text:#e6f0f6; --muted:#94a3b8; --accent:#06b6d4; --glass:rgba(0,0,0,0.4); }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:var(--text);background:linear-gradient(180deg,var(--bg),var(--card));-webkit-font-smoothing:antialiased}
+    .wrap{max-width:var(--maxw);margin:28px auto;padding:20px}
+
+    /* Header */
+    header.site{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:22px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#7dd3fc);display:grid;place-items:center;font-weight:700;color:white}
+    .title{font-size:1.1rem;font-weight:700}
+    .subtitle{font-size:0.82rem;color:var(--muted)}
+
+    /* Controls */
+    .controls{display:flex;gap:8px;align-items:center}
+    .btn{border:0;padding:8px 12px;border-radius:10px;background:var(--card);cursor:pointer;color:var(--text);box-shadow:0 6px 18px rgba(2,6,23,0.06)}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),#7dd3fc);color:white}
+    .search{padding:8px;border-radius:10px;border:1px solid rgba(15,23,42,0.06);min-width:200px}
+
+    /* Main layout */
+    .main-grid{display:grid;grid-template-columns:1fr 320px;gap:24px}
+    @media (max-width:900px){.main-grid{grid-template-columns:1fr}}
+
+    /* Post cards */
+    .posts{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+    @media (max-width:760px){.posts{grid-template-columns:1fr}}
+    .card{background:var(--card);padding:18px;border-radius:16px;box-shadow:0 8px 24px rgba(2,6,23,0.04);display:flex;flex-direction:column;gap:10px}
+    .card .meta{display:flex;gap:10px;align-items:center}
+    .avatar{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#f97316,#fb923c);display:grid;place-items:center;color:white;font-weight:700}
+    .tags{display:flex;gap:8px;flex-wrap:wrap}
+    .tag{font-size:0.78rem;padding:6px 8px;border-radius:999px;background:rgba(0,0,0,0.05);cursor:pointer}
+    .post-title{font-weight:700;margin:6px 0}
+    .excerpt{color:var(--muted);font-size:0.95rem}
+    .meta .dot{opacity:0.6}
+
+    /* Sidebar */
+    aside{position:sticky;top:20px}
+    .card.small{padding:14px}
+    .subscribe input{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(2,6,23,0.06);margin-top:8px}
+    .tag-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+
+    /* Post view */
+    .reader{background:var(--card);padding:28px;border-radius:16px;box-shadow:0 12px 34px rgba(2,6,23,0.06)}
+    .reader h1{margin-top:0}
+    .content img{max-width:100%;border-radius:10px}
+    .content p{line-height:1.65;color:var(--muted)}
+
+    /* Footer */
+    footer{margin-top:34px;text-align:center;color:var(--muted);font-size:0.9rem}
+
+    /* Utility */
+    .hidden{display:none}
+    a.link{color:var(--accent);text-decoration:none}
+
+    /* small responsive tweaks */
+    @media (max-width:520px){.controls{flex-direction:column;align-items:flex-end}.search{min-width:140px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="site">
+      <div class="brand">
+        <div class="logo">AB</div>
+        <div>
+          <div class="title">Amazing Blogger</div>
+          <div class="subtitle">Write. Share. Inspire.</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <input id="search" class="search" placeholder="Search posts, tags or words..." />
+        <button id="themeBtn" class="btn" title="Toggle dark/light">🌓</button>
+        <button id="newPost" class="btn primary">New Post</button>
+      </div>
+    </header>
+
+    <main class="main-grid">
+      <section>
+        <!-- Listing -->
+        <div id="listView">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <h2>Latest Posts</h2>
+            <div style="color:var(--muted)">Showing <span id="count">0</span> posts</div>
+          </div>
+
+          <div id="posts" class="posts"></div>
+        </div>
+
+        <!-- Reader (hidden by default) -->
+        <div id="readerView" class="hidden">
+          <div class="reader">
+            <div class="meta" style="justify-content:space-between">
+              <div style="display:flex;gap:12px;align-items:center">
+                <div class="avatar">AB</div>
+                <div>
+                  <div id="rTitle" style="font-weight:700;font-size:1.2rem"></div>
+                  <div id="rMeta" style="color:var(--muted);font-size:0.9rem"></div>
+                </div>
+              </div>
+              <div>
+                <button id="backBtn" class="btn">← Back</button>
+              </div>
+            </div>
+
+            <article class="content" id="rContent" style="margin-top:18px"></article>
+
+            <div style="margin-top:18px;display:flex;gap:8px;align-items:center">
+              <div class="tags" id="rTags"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside>
+        <div class="card small subscribe">
+          <strong>Subscribe</strong>
+          <p style="margin:6px 0;color:var(--muted)">Get new posts by email — no spam.</p>
+          <input id="email" placeholder="your@example.com" />
+          <button id="subBtn" class="btn primary" style="margin-top:10px;width:100%">Subscribe</button>
+        </div>
+
+        <div class="card small" style="margin-top:12px">
+          <strong>Popular tags</strong>
+          <div class="tag-list" id="tagList"></div>
+        </div>
+
+        <div class="card small" style="margin-top:12px">
+          <strong>About</strong>
+          <p style="margin:8px 0;color:var(--muted)">This is a modern, minimal blog template. Edit, add posts and deploy — free on GitHub Pages.</p>
+          <a class="link" href="#contact">Contact</a>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      Built with ❤️ — <a class="link" href="#">Amazing Blogger</a>
+    </footer>
+  </div>
+
+  <script>
+    /***** SAMPLE POSTS (edit or replace with your own) *****/
+    const POSTS = [
+      {
+        "title":"Ship your first website in 30 minutes",
+        "slug":"ship-your-first-website",
+        "date":"2025-10-15",
+        "tags":["launch","beginner","static"],
+        "excerpt":"A short guide to get your site online fast using GitHub Pages or Netlify.",
+        "cover":"",
+        "content":"<p>Launching a site doesn't have to be hard. Start with a simple HTML file, push to GitHub and enable Pages...</p><p>Pro tip: use a custom domain later to look professional.</p>"
+      },
+      {
+        "title":"Design systems that scale",
+        "slug":"design-systems-scale",
+        "date":"2025-08-02",
+        "tags":["design","ui","workflow"],
+        "excerpt":"How to build a design system that grows with your product.",
+        "cover":"",
+        "content":"<p>A design system is more than components — it's a shared language. Start by documenting tokens, type scales and layout rules.</p>"
+      },
+      {
+        "title":"Writing technical posts people love",
+        "slug":"writing-technical-posts",
+        "date":"2025-05-10",
+        "tags":["writing","blogging"],
+        "excerpt":"Tips for making technical writing readable, practical and memorable.",
+        "cover":"",
+        "content":"<p>Keep introductions short, show complete examples, and include a TL;DR for readers in a hurry.</p>"
+      }
+    ];
+
+    /***** Simple client-side CMS functions *****/
+    const $posts = document.getElementById('posts');
+    const $count = document.getElementById('count');
+    const $search = document.getElementById('search');
+    const $tagList = document.getElementById('tagList');
+    const $readerView = document.getElementById('readerView');
+    const $listView = document.getElementById('listView');
+    const $rTitle = document.getElementById('rTitle');
+    const $rMeta = document.getElementById('rMeta');
+    const $rContent = document.getElementById('rContent');
+    const $rTags = document.getElementById('rTags');
+    const $backBtn = document.getElementById('backBtn');
+
+    let filtered = POSTS.slice();
+
+    function renderList(items){
+      $posts.innerHTML = '';
+      items.forEach(p => {
+        const el = document.createElement('article');
+        el.className = 'card';
+        el.innerHTML = `
+          <div class="meta">
+            <div style="display:flex;gap:10px;align-items:center">
+              <div class="avatar">${p.title.split(' ').map(s=>s[0]).slice(0,2).join('')}</div>
+              <div>
+                <div style="font-weight:700">${escapeHtml(p.title)}</div>
+                <div style="font-size:0.86rem;color:var(--muted)">${formatDate(p.date)} · ${p.tags.join(', ')}</div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:8px">
+            <div class="post-title">${escapeHtml(p.title)}</div>
+            <div class="excerpt">${escapeHtml(p.excerpt)}</div>
+          </div>
+          <div style="margin-top:auto;display:flex;justify-content:space-between;align-items:center">
+            <div class="tags">${p.tags.map(t=>`<span class="tag" data-tag="${t}">${t}</span>`).join('')}</div>
+            <button class="btn" data-slug="${p.slug}">Read</button>
+          </div>
+        `;
+        $posts.appendChild(el);
+      });
+      $count.textContent = items.length;
+    }
+
+    function renderTags(items){
+      const all = [...new Set(items.flatMap(p=>p.tags))];
+      $tagList.innerHTML = all.map(t=>`<button class="btn" data-tag="${t}">${t}</button>`).join('');
+    }
+
+    function openPost(slug){
+      const p = POSTS.find(x=>x.slug===slug);
+      if(!p) return alert('Post not found');
+      $rTitle.textContent = p.title;
+      $rMeta.textContent = `${formatDate(p.date)} · ${p.tags.join(' · ')}`;
+      $rContent.innerHTML = p.content;
+      $rTags.innerHTML = p.tags.map(t=>`<span class="tag">${t}</span>`).join('');
+      $listView.classList.add('hidden');
+      $readerView.classList.remove('hidden');
+      history.pushState({slug}, '', `#/post/${slug}`);
+    }
+
+    function closeReader(){
+      $readerView.classList.add('hidden');
+      $listView.classList.remove('hidden');
+      history.pushState({}, '', location.pathname);
+    }
+
+    // Helpers
+    function formatDate(d){
+      try{ return new Date(d).toLocaleDateString(); }catch(e){return d}
+    }
+    function escapeHtml(s){return (s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')}
+
+    // Events
+    document.addEventListener('click', e=>{
+      if(e.target.matches('[data-slug]')) openPost(e.target.getAttribute('data-slug'));
+      if(e.target.matches('.tag')){
+        const t = e.target.getAttribute('data-tag');
+        $search.value = t; applyFilter();
+      }
+      if(e.target.matches('[data-tag]')){
+        const t = e.target.getAttribute('data-tag');
+        $search.value = t; applyFilter();
+      }
+    });
+
+    $backBtn.addEventListener('click', closeReader);
+
+    $search.addEventListener('input', ()=>{ applyFilter(); });
+
+    function applyFilter(){
+      const q = $search.value.trim().toLowerCase();
+      if(!q) filtered = POSTS.slice();
+      else filtered = POSTS.filter(p=> (p.title+p.excerpt+p.tags.join(' ')+p.content).toLowerCase().includes(q));
+      renderList(filtered);
+    }
+
+    // Theme toggle
+    const themeBtn = document.getElementById('themeBtn');
+    const preferred = localStorage.getItem('theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    setTheme(preferred);
+    themeBtn.addEventListener('click', ()=> setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark'));
+    function setTheme(t){
+      if(t==='dark') document.documentElement.setAttribute('data-theme','dark'); else document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('theme', t);
+    }
+
+    // Quick 'New Post' action (opens compose modal stub)
+    document.getElementById('newPost').addEventListener('click', ()=>{
+      const title = prompt('Enter post title');
+      if(!title) return;
+      const slug = title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+      const excerpt = prompt('Short excerpt') || '';
+      const body = prompt('Paste HTML body (simple tags allowed)') || '<p>Your post content here.</p>';
+      const tags = (prompt('Tags comma separated')||'').split(',').map(s=>s.trim()).filter(Boolean);
+      POSTS.unshift({title,slug,date:new Date().toISOString().slice(0,10),tags,excerpt,content:body});
+      applyFilter();
+      alert('Post added locally. To make it permanent, add it to the POSTS array in the file.');
+    });
+
+    // Subscribe button (simple mailto fallback)
+    document.getElementById('subBtn').addEventListener('click', ()=>{
+      const email = document.getElementById('email').value.trim();
+      if(!email) return alert('Enter email');
+      // As a free template we fallback to mailto — replace with real API (Mailchimp, Netlify Forms, etc.)
+      window.location.href = `mailto:you@yourdomain.com?subject=Subscribe&body=Please add ${encodeURIComponent(email)}`;
+    });
+
+    // Initialize
+    renderList(POSTS);
+    renderTags(POSTS);
+
+    // Support direct linking: #/post/slug
+    window.addEventListener('popstate', ()=>{
+      if(location.hash.startsWith('#/post/')){
+        const slug = location.hash.split('/').pop(); openPost(slug);
+      } else {
+        closeReader();
+      }
+    });
+    if(location.hash.startsWith('#/post/')){
+      const slug = location.hash.split('/').pop(); openPost(slug);
+    }
+
+  </script>
+</body>
+</html>
